@@ -1,3 +1,7 @@
+## 0.0.4
+
+* Version bump
+
 ## 0.0.3
 
 * Enhanced README documentation to highlight instant rendering parameter (`shouldAnimate: false`)
