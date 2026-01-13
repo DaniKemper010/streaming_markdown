@@ -66,7 +66,8 @@ class AnimatedMarkdown extends StatefulWidget {
     this.softLineBreak = false,
     this.autoStart = true,
   }) : assert(
-         (markdown != null && stream == null) || (markdown == null && stream != null),
+         (markdown != null && stream == null) ||
+             (markdown == null && stream != null),
          'Exactly one of markdown or stream must be provided.',
        );
 
@@ -80,7 +81,11 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
   @override
   void initState() {
     super.initState();
-    _controller = MarkdownTypingController(fullText: widget.markdown, stream: widget.stream, config: widget.config);
+    _controller = MarkdownTypingController(
+      fullText: widget.markdown,
+      stream: widget.stream,
+      config: widget.config,
+    );
     if (widget.autoStart) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _controller.start();
@@ -96,7 +101,11 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
         oldWidget.config != widget.config) {
       _controller.stop();
       _controller.dispose();
-      _controller = MarkdownTypingController(fullText: widget.markdown, stream: widget.stream, config: widget.config);
+      _controller = MarkdownTypingController(
+        fullText: widget.markdown,
+        stream: widget.stream,
+        config: widget.config,
+      );
       if (widget.autoStart) {
         _controller.start();
       }

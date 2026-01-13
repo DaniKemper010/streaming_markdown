@@ -15,4 +15,3 @@ abstract class CustomInlineSyntax extends md.InlineSyntax {
   /// Parses the matched content into a markdown element.
   md.Node parseMatch(md.InlineParser parser, Match match);
 }
-

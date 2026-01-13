@@ -27,4 +27,3 @@ class MathBuilder extends InlineBuilder {
     );
   }
 }
-

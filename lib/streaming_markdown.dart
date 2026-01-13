@@ -25,7 +25,3 @@ export 'src/builders/math_builder.dart';
 // Syntax
 export 'src/syntax/custom_inline_syntax.dart';
 export 'src/syntax/dynamic_inline_syntax.dart';
-export 'src/syntax/button_syntax.dart';
-export 'src/syntax/chip_syntax.dart';
-export 'src/syntax/source_syntax.dart';
-

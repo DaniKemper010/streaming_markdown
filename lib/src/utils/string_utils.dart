@@ -42,7 +42,8 @@ class StringUtils {
     // Check if we're splitting a surrogate pair at the start
     if (start > 0 && start < text.length) {
       final int codeUnit = text.codeUnitAt(start);
-      if (_isLowSurrogate(codeUnit) && _isHighSurrogate(text.codeUnitAt(start - 1))) {
+      if (_isLowSurrogate(codeUnit) &&
+          _isHighSurrogate(text.codeUnitAt(start - 1))) {
         // We're in the middle of a surrogate pair, move start back
         start--;
       }
@@ -50,7 +51,9 @@ class StringUtils {
     // Check if we're splitting a surrogate pair at the end
     if (end > 0 && end < text.length) {
       final int codeUnit = text.codeUnitAt(end - 1);
-      if (_isHighSurrogate(codeUnit) && end < text.length && _isLowSurrogate(text.codeUnitAt(end))) {
+      if (_isHighSurrogate(codeUnit) &&
+          end < text.length &&
+          _isLowSurrogate(text.codeUnitAt(end))) {
         // We're in the middle of a surrogate pair, move end forward
         end++;
       }

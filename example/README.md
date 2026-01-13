@@ -22,9 +22,10 @@ This example demonstrates the features of the animated markdown renderer package
 ## Features Demonstrated
 
 - **Multiple Animation Modes**: Switch between character, word, token, and custom modes
-- **Inline Widgets**: Interactive buttons and chips in paragraphs
+- **Inline Widgets**: Interactive buttons, chips, sources, citations, and math widgets in paragraphs
 - **Inline Widgets in Lists**: Buttons and chips working within list items (ordered, unordered, nested)
-- **Custom Blocks**: Warning, info, and error blocks
+- **Custom Syntax Patterns**: Citations with custom regex patterns (e.g., [1], [2])
+- **Streaming Support**: Real-time streaming markdown content with continuous animation
 - **Interactive Elements**: Buttons and chips with callbacks
 - **Real-time Updates**: See interaction counts and selected chips
 

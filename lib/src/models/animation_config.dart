@@ -20,15 +20,6 @@ class AnimationConfig {
   /// Threshold for performance throttling (text length).
   final int throttleThreshold;
 
-  /// Whether to animate individual words/characters/tokens as they appear.
-  final bool animateUnits;
-
-  /// Duration of the fade-in animation for each unit.
-  final Duration unitAnimationDuration;
-
-  /// Offset for slide-in animation (0.0 = no slide, positive = slide from right).
-  final double slideOffset;
-
   /// Creates an [AnimationConfig] with the specified parameters.
   const AnimationConfig({
     this.mode = AnimationMode.word,
@@ -37,12 +28,11 @@ class AnimationConfig {
     this.tokenDelay = const Duration(milliseconds: 30),
     this.chunkSize = 1,
     this.throttleThreshold = 1000,
-    this.animateUnits = false,
-    this.unitAnimationDuration = const Duration(milliseconds: 300),
-    this.slideOffset = 0.0,
   }) : assert(chunkSize > 0, 'chunkSize must be greater than 0'),
-       assert(throttleThreshold > 0, 'throttleThreshold must be greater than 0'),
-       assert(slideOffset >= 0.0, 'slideOffset must be non-negative');
+       assert(
+         throttleThreshold > 0,
+         'throttleThreshold must be greater than 0',
+       );
 
   /// Creates a copy of this config with the given fields replaced.
   AnimationConfig copyWith({
@@ -63,9 +53,6 @@ class AnimationConfig {
       tokenDelay: tokenDelay ?? this.tokenDelay,
       chunkSize: chunkSize ?? this.chunkSize,
       throttleThreshold: throttleThreshold ?? this.throttleThreshold,
-      animateUnits: animateUnits ?? this.animateUnits,
-      unitAnimationDuration: unitAnimationDuration ?? this.unitAnimationDuration,
-      slideOffset: slideOffset ?? this.slideOffset,
     );
   }
 
@@ -78,9 +65,6 @@ class AnimationConfig {
     tokenDelay: Duration(milliseconds: 30),
     chunkSize: 1,
     throttleThreshold: 1000,
-    animateUnits: true,
-    unitAnimationDuration: Duration(seconds: 5),
-    slideOffset: 1.0,
   );
 
   /// Preset configuration matching Claude's typing style.
@@ -92,9 +76,6 @@ class AnimationConfig {
     tokenDelay: Duration(milliseconds: 28),
     chunkSize: 1,
     throttleThreshold: 1000,
-    animateUnits: false,
-    unitAnimationDuration: Duration(milliseconds: 300),
-    slideOffset: 0.0,
   );
 
   /// Preset configuration matching Grok's typing style.
@@ -106,9 +87,6 @@ class AnimationConfig {
     tokenDelay: Duration(milliseconds: 25),
     chunkSize: 1,
     throttleThreshold: 1000,
-    animateUnits: false,
-    unitAnimationDuration: Duration(milliseconds: 250),
-    slideOffset: 0.0,
   );
 
   /// Preset configuration matching Perplexity's typing style.
@@ -120,9 +98,6 @@ class AnimationConfig {
     tokenDelay: Duration(milliseconds: 25),
     chunkSize: 1,
     throttleThreshold: 1000,
-    animateUnits: false,
-    unitAnimationDuration: Duration(milliseconds: 280),
-    slideOffset: 0.0,
   );
 
   /// Preset configuration matching Gemini's typing style.
@@ -134,9 +109,6 @@ class AnimationConfig {
     tokenDelay: Duration(milliseconds: 35),
     chunkSize: 1,
     throttleThreshold: 1000,
-    animateUnits: false,
-    unitAnimationDuration: Duration(milliseconds: 320),
-    slideOffset: 0.0,
   );
 
   /// Preset configuration matching Copilot's typing style.
@@ -148,8 +120,5 @@ class AnimationConfig {
     tokenDelay: Duration(milliseconds: 20),
     chunkSize: 1,
     throttleThreshold: 1000,
-    animateUnits: false,
-    unitAnimationDuration: Duration(milliseconds: 200),
-    slideOffset: 0.0,
   );
 }

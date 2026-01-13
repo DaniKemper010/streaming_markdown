@@ -70,11 +70,14 @@ class MarkdownRenderer extends StatelessWidget {
     final List<md.InlineSyntax> inlineSyntaxes = [];
 
     if (buildersMap != null) {
-      for (final MapEntry<String, CustomMarkdownBuilder> entry in buildersMap.entries) {
+      for (final MapEntry<String, CustomMarkdownBuilder> entry
+          in buildersMap.entries) {
         builders[entry.key] = entry.value;
         // Use custom pattern if provided, otherwise use default [[key:content]] pattern
         final String? customPattern = customSyntaxPatterns?[entry.key];
-        inlineSyntaxes.add(DynamicInlineSyntax(entry.key, customPattern: customPattern));
+        inlineSyntaxes.add(
+          DynamicInlineSyntax(entry.key, customPattern: customPattern),
+        );
       }
     }
 
@@ -85,10 +88,10 @@ class MarkdownRenderer extends StatelessWidget {
         ...inlineSyntaxes,
       ]);
     } else {
-      finalExtensionSet = md.ExtensionSet(md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
-        ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-        ...inlineSyntaxes,
-      ]);
+      finalExtensionSet = md.ExtensionSet(
+        md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+        [...md.ExtensionSet.gitHubFlavored.inlineSyntaxes, ...inlineSyntaxes],
+      );
     }
 
     return MarkdownBody(

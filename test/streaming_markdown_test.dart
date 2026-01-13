@@ -25,7 +25,10 @@ void main() {
 
     test('copyWith creates new instance with updated values', () {
       const AnimationConfig config1 = AnimationConfig();
-      final AnimationConfig config2 = config1.copyWith(mode: AnimationMode.token, chunkSize: 10);
+      final AnimationConfig config2 = config1.copyWith(
+        mode: AnimationMode.token,
+        chunkSize: 10,
+      );
       expect(config2.mode, AnimationMode.token);
       expect(config2.chunkSize, 10);
       expect(config2.charDelay, config1.charDelay);
@@ -34,21 +37,27 @@ void main() {
 
   group('MarkdownTypingController', () {
     test('initializes with empty text', () {
-      final MarkdownTypingController controller = MarkdownTypingController(fullText: '');
+      final MarkdownTypingController controller = MarkdownTypingController(
+        fullText: '',
+      );
       expect(controller.text, '');
       expect(controller.isComplete, true);
       expect(controller.progress, 1.0);
     });
 
     test('initializes with text', () {
-      final MarkdownTypingController controller = MarkdownTypingController(fullText: 'Hello');
+      final MarkdownTypingController controller = MarkdownTypingController(
+        fullText: 'Hello',
+      );
       expect(controller.text, '');
       expect(controller.isComplete, false);
       expect(controller.progress, 0.0);
     });
 
     test('resets to beginning', () {
-      final MarkdownTypingController controller = MarkdownTypingController(fullText: 'Hello');
+      final MarkdownTypingController controller = MarkdownTypingController(
+        fullText: 'Hello',
+      );
       controller.jumpToEnd();
       expect(controller.isComplete, true);
       controller.reset();
@@ -57,7 +66,9 @@ void main() {
     });
 
     test('jumps to end', () {
-      final MarkdownTypingController controller = MarkdownTypingController(fullText: 'Hello');
+      final MarkdownTypingController controller = MarkdownTypingController(
+        fullText: 'Hello',
+      );
       controller.jumpToEnd();
       expect(controller.text, 'Hello');
       expect(controller.isComplete, true);
@@ -66,7 +77,10 @@ void main() {
     test('pauses and resumes', () async {
       final MarkdownTypingController controller = MarkdownTypingController(
         fullText: 'Hello World',
-        config: const AnimationConfig(mode: AnimationMode.character, charDelay: Duration(milliseconds: 10)),
+        config: const AnimationConfig(
+          mode: AnimationMode.character,
+          charDelay: Duration(milliseconds: 10),
+        ),
       );
       controller.start();
       await Future.delayed(const Duration(milliseconds: 30));
@@ -83,7 +97,10 @@ void main() {
     test('stops animation', () async {
       final MarkdownTypingController controller = MarkdownTypingController(
         fullText: 'Hello',
-        config: const AnimationConfig(mode: AnimationMode.character, charDelay: Duration(milliseconds: 10)),
+        config: const AnimationConfig(
+          mode: AnimationMode.character,
+          charDelay: Duration(milliseconds: 10),
+        ),
       );
       controller.start();
       await Future.delayed(const Duration(milliseconds: 20));
@@ -99,7 +116,10 @@ void main() {
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: '# Hello\nThis is a test',
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -108,13 +128,18 @@ void main() {
       expect(find.text('Hello'), findsOneWidget);
     });
 
-    testWidgets('animates text character by character', (WidgetTester tester) async {
+    testWidgets('animates text character by character', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: 'Hello',
-              config: const AnimationConfig(mode: AnimationMode.character, charDelay: Duration(milliseconds: 10)),
+              config: const AnimationConfig(
+                mode: AnimationMode.character,
+                charDelay: Duration(milliseconds: 10),
+              ),
             ),
           ),
         ),
@@ -132,14 +157,19 @@ void main() {
       expect(find.text('H'), findsOneWidget);
     });
 
-    testWidgets('renders inline button in paragraph', (WidgetTester tester) async {
+    testWidgets('renders inline button in paragraph', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: 'Click [[button:Click Me]] here',
               customBuilders: {'button': ButtonBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -149,14 +179,19 @@ void main() {
       expect(find.byType(TextButton), findsOneWidget);
     });
 
-    testWidgets('renders inline chip in paragraph', (WidgetTester tester) async {
+    testWidgets('renders inline chip in paragraph', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: 'Tag: [[chip:Important]]',
               customBuilders: {'chip': ChipBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -168,14 +203,19 @@ void main() {
   });
 
   group('Inline Widgets in List Items', () {
-    testWidgets('renders inline button in unordered list item', (WidgetTester tester) async {
+    testWidgets('renders inline button in unordered list item', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: '- List item with [[button:Action]] button',
               customBuilders: {'button': ButtonBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -185,14 +225,19 @@ void main() {
       expect(find.byType(TextButton), findsOneWidget);
     });
 
-    testWidgets('renders inline chip in unordered list item', (WidgetTester tester) async {
+    testWidgets('renders inline chip in unordered list item', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: '- Item with [[chip:Tag]] here',
               customBuilders: {'chip': ChipBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -202,14 +247,19 @@ void main() {
       expect(find.byType(ActionChip), findsOneWidget);
     });
 
-    testWidgets('renders inline button in ordered list item', (WidgetTester tester) async {
+    testWidgets('renders inline button in ordered list item', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: '1. First item with [[button:Click]]',
               customBuilders: {'button': ButtonBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -219,7 +269,9 @@ void main() {
       expect(find.byType(TextButton), findsOneWidget);
     });
 
-    testWidgets('renders inline widgets in nested list', (WidgetTester tester) async {
+    testWidgets('renders inline widgets in nested list', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -229,8 +281,14 @@ void main() {
   - Nested item with [[button:Nested]] button
   - Another nested with [[chip:Tag]] chip
 ''',
-              customBuilders: {'button': ButtonBuilder(), 'chip': ChipBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              customBuilders: {
+                'button': ButtonBuilder(),
+                'chip': ChipBuilder(),
+              },
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -242,14 +300,23 @@ void main() {
       expect(find.byType(ActionChip), findsOneWidget);
     });
 
-    testWidgets('renders multiple inline widgets in single list item', (WidgetTester tester) async {
+    testWidgets('renders multiple inline widgets in single list item', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
-              markdown: '- Item with [[chip:First]] and [[chip:Second]] and [[button:Action]]',
-              customBuilders: {'button': ButtonBuilder(), 'chip': ChipBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              markdown:
+                  '- Item with [[chip:First]] and [[chip:Second]] and [[button:Action]]',
+              customBuilders: {
+                'button': ButtonBuilder(),
+                'chip': ChipBuilder(),
+              },
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -262,14 +329,19 @@ void main() {
       expect(find.byType(TextButton), findsOneWidget);
     });
 
-    testWidgets('renders inline widget at start of list item', (WidgetTester tester) async {
+    testWidgets('renders inline widget at start of list item', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: '- [[button:Start]] item text',
               customBuilders: {'button': ButtonBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -279,14 +351,19 @@ void main() {
       expect(find.byType(TextButton), findsOneWidget);
     });
 
-    testWidgets('renders inline widget in middle of list item', (WidgetTester tester) async {
+    testWidgets('renders inline widget in middle of list item', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: '- Start text [[button:Middle]] end text',
               customBuilders: {'button': ButtonBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),
@@ -296,14 +373,19 @@ void main() {
       expect(find.byType(TextButton), findsOneWidget);
     });
 
-    testWidgets('renders inline widget at end of list item', (WidgetTester tester) async {
+    testWidgets('renders inline widget at end of list item', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: '- Item text [[button:End]]',
               customBuilders: {'button': ButtonBuilder()},
-              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+              config: const AnimationConfig(
+                charDelay: Duration.zero,
+                wordDelay: Duration.zero,
+              ),
             ),
           ),
         ),

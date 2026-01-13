@@ -32,9 +32,12 @@ class MarkdownTypingController extends ChangeNotifier {
   Completer<void>? _completer;
 
   /// Creates a [MarkdownTypingController] with the given text and config.
-  MarkdownTypingController({String? fullText, Stream<String>? stream, AnimationConfig? config})
-    : _stream = stream,
-      config = config ?? const AnimationConfig() {
+  MarkdownTypingController({
+    String? fullText,
+    Stream<String>? stream,
+    AnimationConfig? config,
+  }) : _stream = stream,
+       config = config ?? const AnimationConfig() {
     if (stream != null) {
       _fullText = '';
       _initializeStream();
@@ -131,21 +134,24 @@ class MarkdownTypingController extends ChangeNotifier {
         _fullText += chunk;
         notifyListeners();
         // Signal that new data is available
-        if (_dataAvailableCompleter != null && !_dataAvailableCompleter!.isCompleted) {
+        if (_dataAvailableCompleter != null &&
+            !_dataAvailableCompleter!.isCompleted) {
           _dataAvailableCompleter!.complete();
           _dataAvailableCompleter = null;
         }
       },
       onError: (Object error, StackTrace stackTrace) {
         _streamCompleted = true;
-        if (_dataAvailableCompleter != null && !_dataAvailableCompleter!.isCompleted) {
+        if (_dataAvailableCompleter != null &&
+            !_dataAvailableCompleter!.isCompleted) {
           _dataAvailableCompleter!.complete();
           _dataAvailableCompleter = null;
         }
       },
       onDone: () {
         _streamCompleted = true;
-        if (_dataAvailableCompleter != null && !_dataAvailableCompleter!.isCompleted) {
+        if (_dataAvailableCompleter != null &&
+            !_dataAvailableCompleter!.isCompleted) {
           _dataAvailableCompleter!.complete();
           _dataAvailableCompleter = null;
         }
@@ -231,7 +237,11 @@ class MarkdownTypingController extends ChangeNotifier {
       return StringUtils.sanitizeUtf16(chunk);
     }
     if (config.mode == AnimationMode.word) {
-      final String remaining = StringUtils.safeSubstring(_fullText, _index, _fullText.length);
+      final String remaining = StringUtils.safeSubstring(
+        _fullText,
+        _index,
+        _fullText.length,
+      );
       if (remaining.isEmpty) return '';
       // Use regex to match words with their following whitespace, preserving newlines
       // Pattern matches: word (non-whitespace) + following whitespace (spaces/tabs/newlines)
@@ -253,7 +263,11 @@ class MarkdownTypingController extends ChangeNotifier {
       return StringUtils.sanitizeUtf16(chunk);
     }
     if (config.mode == AnimationMode.token) {
-      final String remaining = StringUtils.safeSubstring(_fullText, _index, _fullText.length);
+      final String remaining = StringUtils.safeSubstring(
+        _fullText,
+        _index,
+        _fullText.length,
+      );
       if (remaining.isEmpty) return '';
       // Use regex to match tokens (non-whitespace sequences) with their following whitespace
       // Pattern matches: token (non-whitespace) + following whitespace (spaces/tabs/newlines)
@@ -279,13 +293,19 @@ class MarkdownTypingController extends ChangeNotifier {
       final String chunk = StringUtils.safeSubstring(_fullText, _index, end);
       return StringUtils.sanitizeUtf16(chunk);
     }
-    final String chunk = StringUtils.safeSubstring(_fullText, _index, (_index + 1).clamp(0, _fullText.length));
+    final String chunk = StringUtils.safeSubstring(
+      _fullText,
+      _index,
+      (_index + 1).clamp(0, _fullText.length),
+    );
     return StringUtils.sanitizeUtf16(chunk);
   }
 
   Duration _getDelay() {
     if (_fullText.length > config.throttleThreshold) {
-      return Duration(milliseconds: (config.charDelay.inMilliseconds * 2).clamp(0, 100));
+      return Duration(
+        milliseconds: (config.charDelay.inMilliseconds * 2).clamp(0, 100),
+      );
     }
     switch (config.mode) {
       case AnimationMode.character:

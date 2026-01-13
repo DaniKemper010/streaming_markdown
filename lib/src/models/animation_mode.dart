@@ -12,4 +12,3 @@ enum AnimationMode {
   /// Custom chunk-based animation (configurable batch size).
   custom,
 }
-

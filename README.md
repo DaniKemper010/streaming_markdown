@@ -441,6 +441,11 @@ Main widget for animated markdown rendering.
 - `customSyntaxPatterns` (Map<String, String>?) - Custom regex patterns for builders. Maps builder keys to their regex patterns. If a builder key has a custom pattern, it will be used instead of the default `[[key:content]]` pattern
 - `selectable` (bool) - Whether text is selectable (default: true)
 - `styleSheet` (MarkdownStyleSheet?) - Custom markdown style sheet
+- `extensionSet` (ExtensionSet?) - Custom extension set for markdown parsing. If not provided, uses GitHub Flavored Markdown as default
+- `syntaxHighlighter` (SyntaxHighlighter?) - Syntax highlighter for code blocks
+- `onTapLink` (MarkdownTapLinkCallback?) - Callback for handling link taps
+- `shrinkWrap` (bool) - Whether the widget should take the minimum height that wraps its content (default: true)
+- `softLineBreak` (bool) - Whether to handle soft line breaks (default: false)
 - `autoStart` (bool) - Whether to auto-start animation (default: true)
 
 ### `AnimationConfig`
@@ -485,10 +490,15 @@ Renders markdown with custom builders and syntaxes.
 **Properties:**
 - `data` (String, required) - Markdown text to render
 - `customBuilders` (Map<String, CustomMarkdownBuilder>?) - Custom widget builders
-- `customSyntaxPatterns` (Map<String, String>?) - Custom regex patterns for builders. Maps builder keys to their regex patterns
+- `customSyntaxPatterns` (Map<String, String>?) - Custom regex patterns for builders. Maps builder keys to their regex patterns. If a builder key has a custom pattern, it will be used instead of the default `[[key:content]]` pattern
 - `selectable` (bool) - Whether text is selectable (default: true)
 - `styleSheet` (MarkdownStyleSheet?) - Custom markdown style sheet
 - `animationConfig` (AnimationConfig?) - Animation configuration for unit-level animations
+- `extensionSet` (ExtensionSet?) - Custom extension set for markdown parsing. If not provided, uses GitHub Flavored Markdown as default
+- `syntaxHighlighter` (SyntaxHighlighter?) - Syntax highlighter for code blocks
+- `onTapLink` (MarkdownTapLinkCallback?) - Callback for handling link taps
+- `shrinkWrap` (bool) - Whether the widget should take the minimum height that wraps its content (default: true)
+- `softLineBreak` (bool) - Whether to handle soft line breaks (default: false)
 
 ### Built-in Builders
 

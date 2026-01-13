@@ -11,10 +11,7 @@ class ChipBuilder extends InlineBuilder {
   final Color? color;
 
   /// Creates a [ChipBuilder] with optional callback and color.
-  ChipBuilder({
-    this.onPressed,
-    this.color,
-  });
+  ChipBuilder({this.onPressed, this.color});
 
   @override
   Widget buildInline(md.Element element, TextStyle? style) {
@@ -33,4 +30,3 @@ class ChipBuilder extends InlineBuilder {
     );
   }
 }
-
