@@ -21,7 +21,7 @@ class ChipBuilder extends InlineBuilder {
       child: ActionChip(
         label: Text(label),
         onPressed: onPressed != null ? () => onPressed!(label) : null,
-        backgroundColor: color?.withOpacity(0.1),
+        backgroundColor: color?.withValues(alpha: 0.1),
         side: BorderSide(color: color ?? Colors.grey, width: 1),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

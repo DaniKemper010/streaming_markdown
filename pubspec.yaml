@@ -1,5 +1,5 @@
 name: streaming_markdown
-description: "A production-ready Flutter package for animated markdown rendering with ChatGPT-style typing animation, supporting customizable animation speed, chunk size, multiple animation modes, and an extensible custom widget system."
+description: "A Flutter package for animated markdown rendering with ChatGPT-style typing animation, customizable speed, and extensible widget system."
 version: 0.0.1
 homepage: https://github.com/DaniKemper010/streaming_markdown
 repository: https://github.com/DaniKemper010/streaming_markdown
@@ -11,8 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_markdown: ^0.6.18
-  markdown: ^7.1.1
+  flutter_markdown_plus: ^1.0.0
+  markdown: ^7.3.0
 
 dev_dependencies:
   flutter_test:

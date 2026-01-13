@@ -1,9 +1,8 @@
-/// Animated Markdown Renderer for Flutter
-///
-/// A production-ready Flutter package for animated markdown rendering with
-/// ChatGPT-style typing animation, supporting customizable animation speed,
-/// chunk size, multiple animation modes, and an extensible custom widget system.
-library streaming_markdown;
+// Animated Markdown Renderer for Flutter
+//
+// A production-ready Flutter package for animated markdown rendering with
+// ChatGPT-style typing animation, supporting customizable animation speed,
+// chunk size, multiple animation modes, and an extensible custom widget system.
 
 // Models
 export 'src/models/animation_config.dart';
