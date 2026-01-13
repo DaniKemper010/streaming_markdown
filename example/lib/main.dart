@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:streaming_markdown/streaming_markdown.dart';
 
@@ -170,6 +171,7 @@ Enjoy using animated markdown! 🚀
   Widget _buildStaticMarkdown() {
     return AnimatedMarkdown(
       markdown: _exampleMarkdown,
+      styleSheet: MarkdownStyleSheet().copyWith(p: TextStyle(color: Colors.red)),
       config:
           _selectedPreset ??
           AnimationConfig(

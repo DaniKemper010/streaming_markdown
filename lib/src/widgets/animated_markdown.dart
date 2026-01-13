@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 import '../controllers/markdown_typing_controller.dart';
 import '../models/animation_config.dart';
 import '../builders/custom_markdown_builder.dart';
@@ -29,6 +30,22 @@ class AnimatedMarkdown extends StatefulWidget {
   /// Style sheet for markdown.
   final MarkdownStyleSheet? styleSheet;
 
+  /// Custom extension set for markdown parsing.
+  /// If not provided, uses GitHub Flavored Markdown as default.
+  final md.ExtensionSet? extensionSet;
+
+  /// Syntax highlighter for code blocks.
+  final SyntaxHighlighter? syntaxHighlighter;
+
+  /// Callback for handling link taps.
+  final MarkdownTapLinkCallback? onTapLink;
+
+  /// Whether the widget should take the minimum height that wraps its content.
+  final bool shrinkWrap;
+
+  /// Whether to handle soft line breaks.
+  final bool softLineBreak;
+
   /// Whether to auto-start animation.
   final bool autoStart;
 
@@ -42,6 +59,11 @@ class AnimatedMarkdown extends StatefulWidget {
     this.customSyntaxPatterns,
     this.selectable = true,
     this.styleSheet,
+    this.extensionSet,
+    this.syntaxHighlighter,
+    this.onTapLink,
+    this.shrinkWrap = true,
+    this.softLineBreak = false,
     this.autoStart = true,
   }) : assert(
          (markdown != null && stream == null) || (markdown == null && stream != null),
@@ -99,6 +121,11 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
           selectable: widget.selectable,
           styleSheet: widget.styleSheet,
           animationConfig: widget.config,
+          extensionSet: widget.extensionSet,
+          syntaxHighlighter: widget.syntaxHighlighter,
+          onTapLink: widget.onTapLink,
+          shrinkWrap: widget.shrinkWrap,
+          softLineBreak: widget.softLineBreak,
         );
       },
     );

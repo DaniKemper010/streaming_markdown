@@ -38,6 +38,10 @@ class MarkdownRenderer extends StatelessWidget {
   /// Whether to handle soft line breaks.
   final bool softLineBreak;
 
+  /// Custom extension set for markdown parsing.
+  /// If not provided, uses GitHub Flavored Markdown as default.
+  final md.ExtensionSet? extensionSet;
+
   /// Creates a [MarkdownRenderer] with the given markdown data.
   const MarkdownRenderer({
     super.key,
@@ -51,6 +55,7 @@ class MarkdownRenderer extends StatelessWidget {
     this.onTapLink,
     this.shrinkWrap = true,
     this.softLineBreak = false,
+    this.extensionSet,
   });
 
   @override
@@ -73,10 +78,18 @@ class MarkdownRenderer extends StatelessWidget {
       }
     }
 
-    final md.ExtensionSet extensionSet = md.ExtensionSet(md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
-      ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-      ...inlineSyntaxes,
-    ]);
+    final md.ExtensionSet finalExtensionSet;
+    if (extensionSet != null) {
+      finalExtensionSet = md.ExtensionSet(extensionSet!.blockSyntaxes, [
+        ...extensionSet!.inlineSyntaxes,
+        ...inlineSyntaxes,
+      ]);
+    } else {
+      finalExtensionSet = md.ExtensionSet(md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
+        ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
+        ...inlineSyntaxes,
+      ]);
+    }
 
     return MarkdownBody(
       key: ValueKey<String>(data),
@@ -84,7 +97,7 @@ class MarkdownRenderer extends StatelessWidget {
       selectable: selectable,
       styleSheet: styleSheet ?? MarkdownStyleSheet(),
       builders: builders,
-      extensionSet: extensionSet,
+      extensionSet: finalExtensionSet,
       syntaxHighlighter: syntaxHighlighter,
       onTapLink: onTapLink,
       shrinkWrap: shrinkWrap,
