@@ -11,4 +11,3 @@ class SourceSyntax extends CustomInlineSyntax {
     return md.Element.text('source', source);
   }
 }
-

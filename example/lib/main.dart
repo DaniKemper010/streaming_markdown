@@ -116,7 +116,7 @@ Enjoy using animated markdown! 🚀
           _buildControls(),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16).copyWith(bottom: MediaQuery.of(context).padding.bottom + 16),
               child: _selectedTab == 0 ? _buildStaticMarkdown() : _buildStreamMarkdown(),
             ),
           ),
@@ -553,9 +553,7 @@ The stream continues to work even with large amounts of content. The animation a
   }
 
   Stream<String> _getOrCreateStream() {
-    if (_currentStream == null) {
-      _currentStream = _createMarkdownStream();
-    }
+    _currentStream ??= _createMarkdownStream();
     return _currentStream!;
   }
 
