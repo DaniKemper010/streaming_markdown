@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
   streaming_markdown:
     path: ../
+  flutter_markdown_plus: ^1.0.0
+  markdown: ^7.3.0
 
 dev_dependencies:
   flutter_test:

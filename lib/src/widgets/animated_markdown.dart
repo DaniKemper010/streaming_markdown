@@ -49,6 +49,10 @@ class AnimatedMarkdown extends StatefulWidget {
   /// Whether to auto-start animation.
   final bool autoStart;
 
+  /// Whether to animate the markdown text.
+  /// When `false`, the markdown is rendered instantly without animation.
+  final bool shouldAnimate;
+
   /// Creates an [AnimatedMarkdown] widget.
   const AnimatedMarkdown({
     super.key,
@@ -65,6 +69,7 @@ class AnimatedMarkdown extends StatefulWidget {
     this.shrinkWrap = true,
     this.softLineBreak = false,
     this.autoStart = true,
+    this.shouldAnimate = true,
   }) : assert(
          (markdown != null && stream == null) ||
              (markdown == null && stream != null),
@@ -76,70 +81,148 @@ class AnimatedMarkdown extends StatefulWidget {
 }
 
 class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
-  late MarkdownTypingController _controller;
+  MarkdownTypingController? _controller;
+  String _accumulatedText = '';
+  StreamSubscription<String>? _streamSubscription;
 
   @override
   void initState() {
     super.initState();
-    _controller = MarkdownTypingController(
-      fullText: widget.markdown,
-      stream: widget.stream,
-      config: widget.config,
-    );
-    if (widget.autoStart) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _controller.start();
-      });
-    }
-  }
-
-  @override
-  void didUpdateWidget(AnimatedMarkdown oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.markdown != widget.markdown ||
-        oldWidget.stream != widget.stream ||
-        oldWidget.config != widget.config) {
-      _controller.stop();
-      _controller.dispose();
+    if (widget.shouldAnimate) {
       _controller = MarkdownTypingController(
         fullText: widget.markdown,
         stream: widget.stream,
         config: widget.config,
       );
       if (widget.autoStart) {
-        _controller.start();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _controller?.start();
+        });
+      }
+    } else {
+      if (widget.markdown != null) {
+        _accumulatedText = widget.markdown!;
+      } else if (widget.stream != null) {
+        _accumulatedText = '';
+        _streamSubscription = widget.stream!.listen(
+          (String chunk) {
+            if (mounted) {
+              setState(() {
+                _accumulatedText += chunk;
+              });
+            }
+          },
+          onError: (Object error) {
+            // Keep current accumulated text on error
+          },
+          onDone: () {
+            // Stream completed
+          },
+        );
+      }
+    }
+  }
+
+  @override
+  void didUpdateWidget(AnimatedMarkdown oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.shouldAnimate) {
+      if (_controller == null ||
+          oldWidget.markdown != widget.markdown ||
+          oldWidget.stream != widget.stream ||
+          oldWidget.config != widget.config ||
+          oldWidget.shouldAnimate != widget.shouldAnimate) {
+        _streamSubscription?.cancel();
+        _streamSubscription = null;
+        _controller?.stop();
+        _controller?.dispose();
+        _controller = MarkdownTypingController(
+          fullText: widget.markdown,
+          stream: widget.stream,
+          config: widget.config,
+        );
+        if (widget.autoStart) {
+          _controller?.start();
+        }
+      }
+    } else {
+      _controller?.stop();
+      _controller?.dispose();
+      _controller = null;
+      if (widget.markdown != null) {
+        _accumulatedText = widget.markdown!;
+        _streamSubscription?.cancel();
+        _streamSubscription = null;
+      } else if (widget.stream != null) {
+        if (oldWidget.stream != widget.stream ||
+            oldWidget.shouldAnimate != widget.shouldAnimate) {
+          _streamSubscription?.cancel();
+          _accumulatedText = '';
+          _streamSubscription = widget.stream!.listen(
+            (String chunk) {
+              if (mounted) {
+                setState(() {
+                  _accumulatedText += chunk;
+                });
+              }
+            },
+            onError: (Object error) {
+              // Keep current accumulated text on error
+            },
+            onDone: () {
+              // Stream completed
+            },
+          );
+        }
+      } else {
+        _accumulatedText = '';
+        _streamSubscription?.cancel();
+        _streamSubscription = null;
       }
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _streamSubscription?.cancel();
+    _streamSubscription = null;
+    _controller?.dispose();
     super.dispose();
+  }
+
+  Widget _buildMarkdownRenderer(String data) {
+    return MarkdownRenderer(
+      data: data,
+      customBuilders: widget.customBuilders,
+      customSyntaxPatterns: widget.customSyntaxPatterns,
+      selectable: widget.selectable,
+      styleSheet: widget.styleSheet,
+      animationConfig: widget.config,
+      extensionSet: widget.extensionSet,
+      syntaxHighlighter: widget.syntaxHighlighter,
+      onTapLink: widget.onTapLink,
+      shrinkWrap: widget.shrinkWrap,
+      softLineBreak: widget.softLineBreak,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.shouldAnimate) {
+      return _buildMarkdownRenderer(_accumulatedText);
+    }
+    if (_controller == null) {
+      return const SizedBox.shrink();
+    }
     return AnimatedBuilder(
-      animation: _controller,
+      animation: _controller!,
       builder: (BuildContext context, Widget? child) {
-        return MarkdownRenderer(
-          data: _controller.text,
-          customBuilders: widget.customBuilders,
-          customSyntaxPatterns: widget.customSyntaxPatterns,
-          selectable: widget.selectable,
-          styleSheet: widget.styleSheet,
-          animationConfig: widget.config,
-          extensionSet: widget.extensionSet,
-          syntaxHighlighter: widget.syntaxHighlighter,
-          onTapLink: widget.onTapLink,
-          shrinkWrap: widget.shrinkWrap,
-          softLineBreak: widget.softLineBreak,
-        );
+        return _buildMarkdownRenderer(_controller!.text);
       },
     );
   }
 
   /// Gets the typing controller for external control.
-  MarkdownTypingController get controller => _controller;
+  /// Returns `null` if `shouldAnimate` is `false`.
+  MarkdownTypingController? get controller => _controller;
 }
