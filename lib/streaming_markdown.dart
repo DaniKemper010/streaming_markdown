@@ -24,3 +24,7 @@ export 'src/builders/math_builder.dart';
 // Syntax
 export 'src/syntax/custom_inline_syntax.dart';
 export 'src/syntax/dynamic_inline_syntax.dart';
+
+// Re-exports from flutter_markdown_plus
+export 'package:flutter_markdown_plus/flutter_markdown_plus.dart'
+    show MarkdownStyleSheet, SyntaxHighlighter, MarkdownTapLinkCallback;

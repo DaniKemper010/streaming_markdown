@@ -1,3 +1,8 @@
+## 0.0.4
+
+* Enhanced README documentation to highlight instant rendering parameter (`shouldAnimate: false`)
+* Added instant rendering note to Quick Start section
+
 ## 0.0.3
 
 * Added documentation for `shouldAnimate` parameter in README

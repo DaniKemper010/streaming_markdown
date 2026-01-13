@@ -267,6 +267,7 @@ Enjoy using animated markdown! 🚀
   Widget _buildStreamMarkdown() {
     return StreamMarkdownExample(
       shouldAnimate: _shouldAnimate,
+
       config:
           _selectedPreset ??
           AnimationConfig(
@@ -671,6 +672,9 @@ The stream continues to work even with large amounts of content. The animation a
         AnimatedMarkdown(
           key: ValueKey<int>(_streamKey),
           stream: _getOrCreateStream(),
+          styleSheet: MarkdownStyleSheet().copyWith(
+            p: TextStyle(color: Colors.red),
+          ),
           shouldAnimate: widget.shouldAnimate,
           config: widget.config,
           customBuilders: {

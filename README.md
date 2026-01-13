@@ -50,6 +50,8 @@ This is **animated** markdown with [[button:Click Me]] inline!
 )
 ```
 
+**Instant Rendering:** Set `shouldAnimate: false` to render markdown instantly without animation.
+
 ## Usage
 
 ### Basic Usage
