@@ -96,7 +96,12 @@ void main() {
     testWidgets('renders markdown text', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(body: AnimatedMarkdown(markdown: '# Hello\nThis is a test', autoStart: false)),
+          home: Scaffold(
+            body: AnimatedMarkdown(
+              markdown: '# Hello\nThis is a test',
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
+            ),
+          ),
         ),
       );
       await tester.pumpAndSettle();
@@ -109,14 +114,21 @@ void main() {
           home: Scaffold(
             body: AnimatedMarkdown(
               markdown: 'Hello',
-              config: AnimationConfig(mode: AnimationMode.character, charDelay: Duration(milliseconds: 10)),
+              config: const AnimationConfig(mode: AnimationMode.character, charDelay: Duration(milliseconds: 10)),
             ),
           ),
         ),
       );
       await tester.pump();
       expect(find.text('Hello'), findsNothing);
-      await tester.pump(const Duration(milliseconds: 50));
+      // Pump frames to trigger post-frame callback and start animation
+      await tester.pump();
+      // Advance time to allow animation to progress (10ms delay per character)
+      // Pump multiple times to ensure animation progresses
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+      await tester.pump();
+      // Verify that at least one character has appeared
       expect(find.text('H'), findsOneWidget);
     });
 
@@ -127,7 +139,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: 'Click [[button:Click Me]] here',
               customBuilders: {'button': ButtonBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -144,7 +156,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: 'Tag: [[chip:Important]]',
               customBuilders: {'chip': ChipBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -163,7 +175,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: '- List item with [[button:Action]] button',
               customBuilders: {'button': ButtonBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -180,7 +192,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: '- Item with [[chip:Tag]] here',
               customBuilders: {'chip': ChipBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -197,7 +209,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: '1. First item with [[button:Click]]',
               customBuilders: {'button': ButtonBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -218,7 +230,7 @@ void main() {
   - Another nested with [[chip:Tag]] chip
 ''',
               customBuilders: {'button': ButtonBuilder(), 'chip': ChipBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -237,7 +249,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: '- Item with [[chip:First]] and [[chip:Second]] and [[button:Action]]',
               customBuilders: {'button': ButtonBuilder(), 'chip': ChipBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -257,7 +269,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: '- [[button:Start]] item text',
               customBuilders: {'button': ButtonBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -274,7 +286,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: '- Start text [[button:Middle]] end text',
               customBuilders: {'button': ButtonBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),
@@ -291,7 +303,7 @@ void main() {
             body: AnimatedMarkdown(
               markdown: '- Item text [[button:End]]',
               customBuilders: {'button': ButtonBuilder()},
-              autoStart: false,
+              config: const AnimationConfig(charDelay: Duration.zero, wordDelay: Duration.zero),
             ),
           ),
         ),

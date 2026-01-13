@@ -121,8 +121,14 @@ void main() {
       );
       await tester.pump();
       expect(find.text('Hello'), findsNothing);
-      await tester.pump(const Duration(milliseconds: 50));
+      // Pump frames to trigger post-frame callback and start animation
       await tester.pump();
+      // Advance time to allow animation to progress (10ms delay per character)
+      // Pump multiple times to ensure animation progresses
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump();
+      await tester.pump();
+      // Verify that at least one character has appeared
       expect(find.text('H'), findsOneWidget);
     });
 
