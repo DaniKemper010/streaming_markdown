@@ -26,6 +26,18 @@ class MarkdownRenderer extends StatelessWidget {
   /// Animation configuration for unit-level animations.
   final AnimationConfig? animationConfig;
 
+  /// Syntax highlighter for code blocks.
+  final SyntaxHighlighter? syntaxHighlighter;
+
+  /// Callback for handling link taps.
+  final MarkdownTapLinkCallback? onTapLink;
+
+  /// Whether the widget should take the minimum height that wraps its content.
+  final bool shrinkWrap;
+
+  /// Whether to handle soft line breaks.
+  final bool softLineBreak;
+
   /// Creates a [MarkdownRenderer] with the given markdown data.
   const MarkdownRenderer({
     super.key,
@@ -35,6 +47,10 @@ class MarkdownRenderer extends StatelessWidget {
     this.selectable = true,
     this.styleSheet,
     this.animationConfig,
+    this.syntaxHighlighter,
+    this.onTapLink,
+    this.shrinkWrap = true,
+    this.softLineBreak = false,
   });
 
   @override
@@ -62,8 +78,6 @@ class MarkdownRenderer extends StatelessWidget {
       ...inlineSyntaxes,
     ]);
 
-    // Use a key based on data to force rebuild when data changes
-    // This helps prevent stale widgets from causing errors
     return MarkdownBody(
       key: ValueKey<String>(data),
       data: data,
@@ -71,6 +85,10 @@ class MarkdownRenderer extends StatelessWidget {
       styleSheet: styleSheet ?? MarkdownStyleSheet(),
       builders: builders,
       extensionSet: extensionSet,
+      syntaxHighlighter: syntaxHighlighter,
+      onTapLink: onTapLink,
+      shrinkWrap: shrinkWrap,
+      softLineBreak: softLineBreak,
     );
   }
 }
