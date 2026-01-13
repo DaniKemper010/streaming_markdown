@@ -60,6 +60,19 @@ AnimatedMarkdown(
 )
 ```
 
+### Instant Rendering
+
+To render markdown instantly without animation, set `shouldAnimate: false`:
+
+```dart
+AnimatedMarkdown(
+  markdown: '# Hello\nThis is rendered instantly!',
+  shouldAnimate: false,
+)
+```
+
+This is useful when you want to display content immediately or toggle between animated and instant rendering.
+
 ### Custom Animation Configuration
 
 ```dart
@@ -447,6 +460,7 @@ Main widget for animated markdown rendering.
 - `shrinkWrap` (bool) - Whether the widget should take the minimum height that wraps its content (default: true)
 - `softLineBreak` (bool) - Whether to handle soft line breaks (default: false)
 - `autoStart` (bool) - Whether to auto-start animation (default: true)
+- `shouldAnimate` (bool) - Whether to animate the markdown text. When `false`, the markdown is rendered instantly without animation (default: true)
 
 ### `AnimationConfig`
 
