@@ -261,6 +261,14 @@ Enjoy using animated markdown! 🚀
         ),
       },
       customSyntaxPatterns: {'citation': r'\[(\d+)\]'},
+      onAnimationComplete: (String finalText) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Animation completed!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      },
     );
   }
 
@@ -698,6 +706,16 @@ The stream continues to work even with large amounts of content. The animation a
             ),
           },
           customSyntaxPatterns: {'citation': r'\[(\d+)\]'},
+          onAnimationComplete: (String finalText) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Stream animation completed!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+          },
         ),
       ],
     );

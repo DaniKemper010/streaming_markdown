@@ -1,3 +1,9 @@
+## 0.0.5
+
+* Added `onAnimationComplete` callback to `AnimatedMarkdown` widget
+* The callback is invoked when the typing animation completes, receiving the final animated text as a parameter
+* Works with both static markdown and streaming content
+
 ## 0.0.4
 
 * Version bump

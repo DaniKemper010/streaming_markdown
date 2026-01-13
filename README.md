@@ -20,8 +20,8 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  streaming_markdown:
-    path: ../streaming_markdown  # or use pub.dev version when published
+  streaming_markdown: ^0.0.4
+  # For local development, use: streaming_markdown: { path: ../streaming_markdown }
 ```
 
 ## Quick Start
@@ -140,6 +140,46 @@ Stream<String> createMarkdownStream() {
 ```
 
 The controller automatically handles stream completion and continues animating until all content is displayed. See the `example/` directory for a complete streaming example.
+
+### Animation Complete Callback
+
+You can be notified when the typing animation completes using the `onAnimationComplete` callback. This is useful for triggering actions after the animation finishes, such as showing a completion indicator or enabling user interactions.
+
+**With Static Markdown:**
+```dart
+AnimatedMarkdown(
+  markdown: '# Hello\nThis is animated markdown!',
+  onAnimationComplete: (String finalText) {
+    print('Animation completed! Final text length: ${finalText.length}');
+    // Perform actions after animation completes
+  },
+)
+```
+
+**With Streaming Content:**
+```dart
+AnimatedMarkdown(
+  stream: markdownStream,
+  onAnimationComplete: (String finalText) {
+    print('Stream animation completed!');
+    print('Total content: ${finalText.length} characters');
+    // Handle completion of streamed content
+  },
+)
+```
+
+**With Instant Rendering:**
+When `shouldAnimate: false`, the callback is invoked immediately after the content is rendered:
+```dart
+AnimatedMarkdown(
+  markdown: '# Instant content',
+  shouldAnimate: false,
+  onAnimationComplete: (String finalText) {
+    // Called immediately after rendering
+    print('Content rendered: $finalText');
+  },
+)
+```
 
 ### Animation Modes
 
@@ -463,6 +503,7 @@ Main widget for animated markdown rendering.
 - `softLineBreak` (bool) - Whether to handle soft line breaks (default: false)
 - `autoStart` (bool) - Whether to auto-start animation (default: true)
 - `shouldAnimate` (bool) - Whether to animate the markdown text. When `false`, the markdown is rendered instantly without animation (default: true)
+- `onAnimationComplete` (void Function(String)?) - Callback invoked when the typing animation completes. Receives the final animated text as a parameter. Works with both static markdown and streaming content
 
 ### `AnimationConfig`
 

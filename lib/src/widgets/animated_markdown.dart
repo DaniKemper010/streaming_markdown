@@ -53,6 +53,10 @@ class AnimatedMarkdown extends StatefulWidget {
   /// When `false`, the markdown is rendered instantly without animation.
   final bool shouldAnimate;
 
+  /// Callback invoked when the typing animation completes.
+  /// Receives the final animated text as a parameter.
+  final void Function(String)? onAnimationComplete;
+
   /// Creates an [AnimatedMarkdown] widget.
   const AnimatedMarkdown({
     super.key,
@@ -70,6 +74,7 @@ class AnimatedMarkdown extends StatefulWidget {
     this.softLineBreak = false,
     this.autoStart = true,
     this.shouldAnimate = true,
+    this.onAnimationComplete,
   }) : assert(
          (markdown != null && stream == null) ||
              (markdown == null && stream != null),
@@ -84,6 +89,7 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
   MarkdownTypingController? _controller;
   String _accumulatedText = '';
   StreamSubscription<String>? _streamSubscription;
+  bool _wasComplete = false;
 
   @override
   void initState() {
@@ -102,8 +108,13 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
     } else {
       if (widget.markdown != null) {
         _accumulatedText = widget.markdown!;
+        _wasComplete = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          widget.onAnimationComplete?.call(_accumulatedText);
+        });
       } else if (widget.stream != null) {
         _accumulatedText = '';
+        _wasComplete = false;
         _streamSubscription = widget.stream!.listen(
           (String chunk) {
             if (mounted) {
@@ -114,9 +125,16 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
           },
           onError: (Object error) {
             // Keep current accumulated text on error
+            if (mounted && !_wasComplete) {
+              _wasComplete = true;
+              widget.onAnimationComplete?.call(_accumulatedText);
+            }
           },
           onDone: () {
-            // Stream completed
+            if (mounted && !_wasComplete) {
+              _wasComplete = true;
+              widget.onAnimationComplete?.call(_accumulatedText);
+            }
           },
         );
       }
@@ -136,6 +154,7 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
         _streamSubscription = null;
         _controller?.stop();
         _controller?.dispose();
+        _wasComplete = false;
         _controller = MarkdownTypingController(
           fullText: widget.markdown,
           stream: widget.stream,
@@ -153,11 +172,18 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
         _accumulatedText = widget.markdown!;
         _streamSubscription?.cancel();
         _streamSubscription = null;
+        _wasComplete = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            widget.onAnimationComplete?.call(_accumulatedText);
+          }
+        });
       } else if (widget.stream != null) {
         if (oldWidget.stream != widget.stream ||
             oldWidget.shouldAnimate != widget.shouldAnimate) {
           _streamSubscription?.cancel();
           _accumulatedText = '';
+          _wasComplete = false;
           _streamSubscription = widget.stream!.listen(
             (String chunk) {
               if (mounted) {
@@ -168,9 +194,16 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
             },
             onError: (Object error) {
               // Keep current accumulated text on error
+              if (mounted && !_wasComplete) {
+                _wasComplete = true;
+                widget.onAnimationComplete?.call(_accumulatedText);
+              }
             },
             onDone: () {
-              // Stream completed
+              if (mounted && !_wasComplete) {
+                _wasComplete = true;
+                widget.onAnimationComplete?.call(_accumulatedText);
+              }
             },
           );
         }
@@ -178,6 +211,7 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
         _accumulatedText = '';
         _streamSubscription?.cancel();
         _streamSubscription = null;
+        _wasComplete = false;
       }
     }
   }
@@ -217,6 +251,15 @@ class _AnimatedMarkdownState extends State<AnimatedMarkdown> {
     return AnimatedBuilder(
       animation: _controller!,
       builder: (BuildContext context, Widget? child) {
+        if (!_controller!.isComplete && _wasComplete) {
+          _wasComplete = false;
+        }
+        if (_controller!.isComplete && !_wasComplete) {
+          _wasComplete = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            widget.onAnimationComplete?.call(_controller!.text);
+          });
+        }
         return _buildMarkdownRenderer(_controller!.text);
       },
     );
