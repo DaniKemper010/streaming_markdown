@@ -1,3 +1,15 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial release of streaming_markdown
+* ChatGPT-style typing animation for markdown content
+* Support for multiple animation modes: character, word, token, and custom chunk-based
+* Real-time streaming support via Stream<String>
+* Preset configurations matching popular AI assistants (ChatGPT, Claude, Grok, Perplexity, Gemini, Copilot)
+* Extensible custom widget system with inline builders
+* Built-in ButtonBuilder and ChipBuilder for interactive elements
+* Custom syntax pattern support for flexible widget integration
+* Full markdown support with GitHub Flavored Markdown
+* Inline widgets work seamlessly within list items
+* Performance optimizations with automatic throttling for large texts
+* MarkdownTypingController for manual animation control
+* Comprehensive API with customizable style sheets and syntax highlighting
