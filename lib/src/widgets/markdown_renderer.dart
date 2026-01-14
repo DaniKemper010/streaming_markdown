@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -88,9 +89,45 @@ class MarkdownRenderer extends StatelessWidget {
         ...inlineSyntaxes,
       ]);
     } else {
+      // Put custom inline syntaxes FIRST so they're processed before default syntaxes
+      // This prevents conflicts with markdown's link syntax [text](url) when using patterns like [1]
+      // #region agent log
+      try {
+        final logData = {
+          'sessionId': 'debug-session',
+          'runId': 'run9',
+          'hypothesisId': 'M',
+          'location': 'lib/src/widgets/markdown_renderer.dart:91',
+          'message':
+              'Processing custom inline syntaxes BEFORE default syntaxes',
+          'data': {
+            'customSyntaxCount': inlineSyntaxes.length,
+            'customSyntaxKeys': inlineSyntaxes
+                .map((s) => s is DynamicInlineSyntax ? s.key : 'unknown')
+                .toList(),
+          },
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
+        };
+        final logFile =
+            '/Users/danikemper/streaming_markdown/.cursor/debug.log';
+        final logLine = '${logData.toString()}\n';
+        (() async {
+          try {
+            await Future(() {
+              final file = File(logFile);
+              file.writeAsStringSync(logLine, mode: FileMode.append);
+            });
+          } catch (e) {
+            // Ignore logging errors
+          }
+        })();
+      } catch (e) {
+        // Ignore logging errors
+      }
+      // #endregion
       finalExtensionSet = md.ExtensionSet(
         md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-        [...md.ExtensionSet.gitHubFlavored.inlineSyntaxes, ...inlineSyntaxes],
+        [...inlineSyntaxes, ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
       );
     }
 

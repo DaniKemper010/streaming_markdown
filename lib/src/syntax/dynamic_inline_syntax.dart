@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:markdown/markdown.dart' as md;
 import 'custom_inline_syntax.dart';
 
@@ -36,6 +37,41 @@ class DynamicInlineSyntax extends CustomInlineSyntax {
     final String content = match.groupCount > 0
         ? (match.group(1)?.trim() ?? '')
         : '';
+    // #region agent log
+    try {
+      final logData = {
+        'sessionId': 'debug-session',
+        'runId': 'run6',
+        'hypothesisId': 'J',
+        'location': 'lib/src/syntax/dynamic_inline_syntax.dart:32',
+        'message': 'DynamicInlineSyntax.parseMatch',
+        'data': {
+          'key': key,
+          'hasCustomPattern': customPattern != null,
+          'customPattern': customPattern,
+          'content': content,
+          'matchString': match.group(0),
+          'matchStart': match.start,
+          'matchEnd': match.end,
+        },
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+      };
+      final logFile = '/Users/danikemper/streaming_markdown/.cursor/debug.log';
+      final logLine = '${logData.toString()}\n';
+      (() async {
+        try {
+          await Future(() {
+            final file = File(logFile);
+            file.writeAsStringSync(logLine, mode: FileMode.append);
+          });
+        } catch (e) {
+          // Ignore logging errors
+        }
+      })();
+    } catch (e) {
+      // Ignore logging errors
+    }
+    // #endregion
     return md.Element.text(key, content);
   }
 }

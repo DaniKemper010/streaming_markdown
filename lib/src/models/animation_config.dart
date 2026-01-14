@@ -20,6 +20,11 @@ class AnimationConfig {
   /// Threshold for performance throttling (text length).
   final int throttleThreshold;
 
+  /// Multiplier applied to character delay when remaining characters exceed throttleThreshold.
+  /// Used to slow down animation for long texts to maintain performance.
+  /// Default value of 2.0 doubles the delay when throttling is active.
+  final double throttleMultiplier;
+
   /// Creates an [AnimationConfig] with the specified parameters.
   const AnimationConfig({
     this.mode = AnimationMode.word,
@@ -27,11 +32,16 @@ class AnimationConfig {
     this.wordDelay = const Duration(milliseconds: 50),
     this.tokenDelay = const Duration(milliseconds: 30),
     this.chunkSize = 1,
-    this.throttleThreshold = 1000,
+    this.throttleThreshold = 300,
+    this.throttleMultiplier = 2.0,
   }) : assert(chunkSize > 0, 'chunkSize must be greater than 0'),
        assert(
          throttleThreshold > 0,
          'throttleThreshold must be greater than 0',
+       ),
+       assert(
+         throttleMultiplier > 0,
+         'throttleMultiplier must be greater than 0',
        );
 
   /// Creates a copy of this config with the given fields replaced.
@@ -42,6 +52,7 @@ class AnimationConfig {
     Duration? tokenDelay,
     int? chunkSize,
     int? throttleThreshold,
+    double? throttleMultiplier,
     bool? animateUnits,
     Duration? unitAnimationDuration,
     double? slideOffset,
@@ -53,6 +64,7 @@ class AnimationConfig {
       tokenDelay: tokenDelay ?? this.tokenDelay,
       chunkSize: chunkSize ?? this.chunkSize,
       throttleThreshold: throttleThreshold ?? this.throttleThreshold,
+      throttleMultiplier: throttleMultiplier ?? this.throttleMultiplier,
     );
   }
 
@@ -64,7 +76,8 @@ class AnimationConfig {
     charDelay: Duration(milliseconds: 15),
     tokenDelay: Duration(milliseconds: 30),
     chunkSize: 1,
-    throttleThreshold: 1000,
+    throttleThreshold: 300,
+    throttleMultiplier: 2.0,
   );
 
   /// Preset configuration matching Claude's typing style.
@@ -75,7 +88,8 @@ class AnimationConfig {
     charDelay: Duration(milliseconds: 12),
     tokenDelay: Duration(milliseconds: 28),
     chunkSize: 1,
-    throttleThreshold: 1000,
+    throttleThreshold: 300,
+    throttleMultiplier: 2.0,
   );
 
   /// Preset configuration matching Grok's typing style.
@@ -86,7 +100,8 @@ class AnimationConfig {
     charDelay: Duration(milliseconds: 10),
     tokenDelay: Duration(milliseconds: 25),
     chunkSize: 1,
-    throttleThreshold: 1000,
+    throttleThreshold: 300,
+    throttleMultiplier: 2.0,
   );
 
   /// Preset configuration matching Perplexity's typing style.
@@ -97,7 +112,8 @@ class AnimationConfig {
     charDelay: Duration(milliseconds: 12),
     tokenDelay: Duration(milliseconds: 25),
     chunkSize: 1,
-    throttleThreshold: 1000,
+    throttleThreshold: 300,
+    throttleMultiplier: 2.0,
   );
 
   /// Preset configuration matching Gemini's typing style.
@@ -108,7 +124,8 @@ class AnimationConfig {
     charDelay: Duration(milliseconds: 18),
     tokenDelay: Duration(milliseconds: 35),
     chunkSize: 1,
-    throttleThreshold: 1000,
+    throttleThreshold: 300,
+    throttleMultiplier: 2.0,
   );
 
   /// Preset configuration matching Copilot's typing style.
@@ -119,6 +136,7 @@ class AnimationConfig {
     charDelay: Duration(milliseconds: 8),
     tokenDelay: Duration(milliseconds: 20),
     chunkSize: 1,
-    throttleThreshold: 1000,
+    throttleThreshold: 300,
+    throttleMultiplier: 2.0,
   );
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -126,7 +127,9 @@ Enjoy using animated markdown! 🚀
               ).copyWith(bottom: MediaQuery.of(context).padding.bottom + 16),
               child: _selectedTab == 0
                   ? _buildStaticMarkdown()
-                  : _buildStreamMarkdown(),
+                  : _selectedTab == 1
+                  ? _buildStreamMarkdown()
+                  : _buildLargeChunkStream(),
             ),
           ),
         ],
@@ -152,6 +155,9 @@ Enjoy using animated markdown! 🚀
             child: _buildTabButton(0, 'Static Markdown', Icons.text_fields),
           ),
           Expanded(child: _buildTabButton(1, 'Stream Example', Icons.stream)),
+          Expanded(
+            child: _buildTabButton(2, 'Large Chunk Stream', Icons.data_usage),
+          ),
         ],
       ),
     );
@@ -185,7 +191,7 @@ Enjoy using animated markdown! 🚀
           children: [
             Icon(icon, size: 18),
             const SizedBox(width: 8),
-            Text(label),
+            Flexible(child: Text(label, overflow: TextOverflow.ellipsis)),
           ],
         ),
       ),
@@ -276,6 +282,52 @@ Enjoy using animated markdown! 🚀
     return StreamMarkdownExample(
       shouldAnimate: _shouldAnimate,
 
+      config:
+          _selectedPreset ??
+          AnimationConfig(
+            mode: _selectedMode,
+            charDelay: const Duration(milliseconds: 10),
+            wordDelay: const Duration(milliseconds: 50),
+            tokenDelay: const Duration(milliseconds: 30),
+          ),
+      onButtonPressed: (label) {
+        setState(() {
+          _buttonPressCount++;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Button "$label" pressed! (Count: $_buttonPressCount)',
+            ),
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      },
+      onChipPressed: (label) {
+        setState(() {
+          if (_pressedChips.contains(label)) {
+            _pressedChips.remove(label);
+          } else {
+            _pressedChips.add(label);
+          }
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              _pressedChips.contains(label)
+                  ? 'Chip "$label" selected!'
+                  : 'Chip "$label" deselected!',
+            ),
+            duration: const Duration(seconds: 1),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLargeChunkStream() {
+    return LargeChunkStreamExample(
+      shouldAnimate: _shouldAnimate,
       config:
           _selectedPreset ??
           AnimationConfig(
@@ -461,28 +513,67 @@ class CitationBuilder extends InlineBuilder {
   @override
   Widget buildInline(md.Element element, TextStyle? style) {
     final String citationNumber = element.textContent;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2.0),
-      child: InkWell(
-        onTap: onPressed != null ? () => onPressed!(citationNumber) : null,
-        borderRadius: BorderRadius.circular(4),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          decoration: BoxDecoration(
-            color: (color ?? Colors.blue).withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: color ?? Colors.blue, width: 1),
-          ),
-          child: Text(
-            '[$citationNumber]',
-            style: (style ?? const TextStyle()).copyWith(
-              color: color ?? Colors.blue,
-              fontSize: (style?.fontSize ?? 14) * 0.85,
-              fontWeight: FontWeight.w600,
-            ),
+    // #region agent log
+    try {
+      final logData = {
+        'sessionId': 'debug-session',
+        'runId': 'run10',
+        'hypothesisId': 'N',
+        'location': 'example/lib/main.dart:447',
+        'message':
+            'CitationBuilder using Text.rich with WidgetSpan for inline rendering',
+        'data': {
+          'citationNumber': citationNumber,
+          'elementTag': element.tag,
+          'elementTextContent': element.textContent,
+        },
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+      };
+      final logFile = '/Users/danikemper/streaming_markdown/.cursor/debug.log';
+      final logLine = '${logData.toString()}\n';
+      (() async {
+        try {
+          await Future(() {
+            final file = File(logFile);
+            file.writeAsStringSync(logLine, mode: FileMode.append);
+          });
+        } catch (e) {
+          // Ignore logging errors
+        }
+      })();
+    } catch (e) {
+      // Ignore logging errors
+    }
+    // #endregion
+    final Widget citationWidget = GestureDetector(
+      onTap: onPressed != null ? () => onPressed!(citationNumber) : null,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        decoration: BoxDecoration(
+          color: (color ?? Colors.blue).withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: color ?? Colors.blue, width: 1),
+        ),
+        child: Text(
+          '[$citationNumber]',
+          style: (style ?? const TextStyle()).copyWith(
+            color: color ?? Colors.blue,
+            fontSize: (style?.fontSize ?? 14) * 0.85,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
+    );
+    return Text.rich(
+      TextSpan(
+        children: [
+          WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            child: citationWidget,
+          ),
+        ],
+      ),
+      style: style,
     );
   }
 }
@@ -498,31 +589,104 @@ class SourceBuilder extends InlineBuilder {
   @override
   Widget buildInline(md.Element element, TextStyle? style) {
     final String source = element.textContent;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: (color ?? Colors.blue).withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color ?? Colors.blue, width: 1),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.source, size: 14, color: color ?? Colors.blue),
-            const SizedBox(width: 4),
-            Text(
-              source,
-              style: style?.copyWith(
-                color: color ?? Colors.blue,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
+    // #region agent log
+    try {
+      final logData = {
+        'sessionId': 'debug-session',
+        'runId': 'run2',
+        'hypothesisId': 'F',
+        'location': 'example/lib/main.dart:491',
+        'message': 'SourceBuilder.buildInline - element structure',
+        'data': {
+          'source': source,
+          'elementTag': element.tag,
+          'elementTextContent': element.textContent,
+          'elementChildrenCount': element.children?.length ?? 0,
+          'hasStyle': style != null,
+        },
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+      };
+      final logFile = '/Users/danikemper/streaming_markdown/.cursor/debug.log';
+      final logLine = '${logData.toString()}\n';
+      (() async {
+        try {
+          await Future(() {
+            final file = File(logFile);
+            file.writeAsStringSync(logLine, mode: FileMode.append);
+          });
+        } catch (e) {
+          // Ignore logging errors
+        }
+      })();
+    } catch (e) {
+      // Ignore logging errors
+    }
+    // #endregion
+    return Builder(
+      builder: (BuildContext context) {
+        // #region agent log
+        try {
+          final box = context.findRenderObject();
+          final constraints = box is RenderBox ? box.constraints : null;
+          final logData = {
+            'sessionId': 'debug-session',
+            'runId': 'run1',
+            'hypothesisId': 'B',
+            'location': 'example/lib/main.dart:493',
+            'message': 'SourceBuilder widget constraints',
+            'data': {
+              'source': source,
+              'hasConstraints': constraints != null,
+              'maxWidth': constraints?.maxWidth,
+              'minWidth': constraints?.minWidth,
+              'maxWidthIsFinite': constraints?.maxWidth.isFinite,
+            },
+            'timestamp': DateTime.now().millisecondsSinceEpoch,
+          };
+          final logFile =
+              '/Users/danikemper/streaming_markdown/.cursor/debug.log';
+          final logLine = '${logData.toString()}\n';
+          (() async {
+            try {
+              await Future(() {
+                final file = File(logFile);
+                file.writeAsStringSync(logLine, mode: FileMode.append);
+              });
+            } catch (e) {
+              // Ignore logging errors
+            }
+          })();
+        } catch (e) {
+          // Ignore logging errors
+        }
+        // #endregion
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: (color ?? Colors.blue).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: color ?? Colors.blue, width: 1),
             ),
-          ],
-        ),
-      ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.source, size: 14, color: color ?? Colors.blue),
+                const SizedBox(width: 4),
+                Text(
+                  source,
+                  style: style?.copyWith(
+                    color: color ?? Colors.blue,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -711,6 +875,207 @@ The stream continues to work even with large amounts of content. The animation a
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Stream animation completed!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class LargeChunkStreamExample extends StatefulWidget {
+  final AnimationConfig config;
+  final bool shouldAnimate;
+  final void Function(String) onButtonPressed;
+  final void Function(String) onChipPressed;
+
+  const LargeChunkStreamExample({
+    super.key,
+    required this.config,
+    this.shouldAnimate = true,
+    required this.onButtonPressed,
+    required this.onChipPressed,
+  });
+
+  @override
+  State<LargeChunkStreamExample> createState() =>
+      _LargeChunkStreamExampleState();
+}
+
+class _LargeChunkStreamExampleState extends State<LargeChunkStreamExample> {
+  StreamController<String>? _streamController;
+  int _streamKey = 0;
+  Stream<String>? _currentStream;
+
+  final String _streamExampleContent = '''
+# Streaming Markdown Example 📡
+
+This demonstrates how **AnimatedMarkdown** handles streaming content in real-time.
+
+## How It Works
+
+The content below is being streamed chunk by chunk, simulating a real-world scenario like:
+
+- API responses
+- WebSocket messages
+- Server-sent events
+- Large file processing
+
+## Features Demonstrated
+
+- ✨ **Real-time streaming**: Content appears as it arrives
+- 🔄 **Continuous animation**: Animation continues seamlessly as new chunks arrive
+- 📦 **Large chunk handling**: Handles both small and large data chunks
+- ⚡ **Non-blocking**: UI remains responsive during streaming
+
+## Example Content
+
+This is the first chunk of content. Notice how the animation continues smoothly.
+
+Here comes more content! The animation doesn't stop or restart.
+
+### Lists Work Too
+
+- First streaming item
+- Second streaming item
+- Third streaming item with [[chip:Streaming]] support
+
+### Code Blocks
+
+\`\`\`dart
+// This code block is streamed in chunks
+Stream<String> markdownStream = getMarkdownStream();
+AnimatedMarkdown(
+  stream: markdownStream,
+  config: AnimationConfig.chatGPT,
+)
+\`\`\`
+
+## Interactive Elements
+
+You can even stream interactive elements: [[button:Streamed Button]]
+
+And chips work too: [[chip:Streamed]] [[chip:Content]]
+
+Sources work in streams too: [[source:API Response]] [[source:WebSocket]]
+
+Citations also work in streams: This is streamed content with citation [1] and [2].
+
+## Final Thoughts
+
+The stream continues to work even with large amounts of content. The animation adapts and continues smoothly, making it perfect for real-time applications!
+
+🎉 **Streaming complete!**
+''';
+
+  Stream<String> _createMarkdownStream() {
+    _streamController?.close();
+    _streamController = StreamController<String>.broadcast();
+    final List<String> chunks = _splitIntoLargeChunks(_streamExampleContent);
+    _streamLargeChunks(chunks, 0);
+    return _streamController!.stream;
+  }
+
+  void _streamLargeChunks(List<String> chunks, int index) {
+    if (index >= chunks.length) {
+      _streamController?.close();
+      return;
+    }
+    final Duration delay = index == 0
+        ? Duration.zero
+        : const Duration(seconds: 3);
+    Future.delayed(delay, () {
+      if (_streamController != null && !_streamController!.isClosed) {
+        _streamController!.add(chunks[index]);
+        _streamLargeChunks(chunks, index + 1);
+      }
+    });
+  }
+
+  List<String> _splitIntoLargeChunks(String text) {
+    final int splitPoint = (text.length * 0.6).round();
+    int bestSplitPoint = splitPoint;
+    for (int i = splitPoint - 50; i < splitPoint + 50 && i < text.length; i++) {
+      if (i > 0 &&
+          text[i] == '\n' &&
+          (i == text.length - 1 || text[i + 1] == '\n')) {
+        bestSplitPoint = i + 1;
+        break;
+      }
+    }
+    return [text.substring(0, bestSplitPoint), text.substring(bestSplitPoint)];
+  }
+
+  void _restartStream() {
+    setState(() {
+      _streamController?.close();
+      _streamController = null;
+      _currentStream = null;
+      _streamKey++;
+    });
+  }
+
+  Stream<String> _getOrCreateStream() {
+    _currentStream ??= _createMarkdownStream();
+    return _currentStream!;
+  }
+
+  @override
+  void dispose() {
+    _streamController?.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: ElevatedButton.icon(
+            onPressed: _restartStream,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Restart Stream'),
+          ),
+        ),
+        AnimatedMarkdown(
+          key: ValueKey<int>(_streamKey),
+          stream: _getOrCreateStream(),
+          styleSheet: MarkdownStyleSheet().copyWith(
+            p: TextStyle(color: Colors.red),
+          ),
+          shouldAnimate: widget.shouldAnimate,
+          config: widget.config,
+          customBuilders: {
+            'button': ButtonBuilder(onPressed: widget.onButtonPressed),
+            'chip': ChipBuilder(onPressed: widget.onChipPressed),
+            'math': MathBuilder(),
+            'source': SourceBuilder(),
+            'citation': CitationBuilder(
+              onPressed: (citationNumber) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Citation [$citationNumber] clicked! Reference: Source $citationNumber',
+                      ),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
+            ),
+          },
+          customSyntaxPatterns: {'citation': r'\[(\d+)\]'},
+          onAnimationComplete: (String finalText) {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Large chunk stream animation completed!'),
                   duration: Duration(seconds: 2),
                 ),
               );

@@ -71,7 +71,7 @@ packages:
     source: hosted
     version: "6.0.0"
   flutter_markdown_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_markdown_plus
       sha256: "039177906850278e8fb1cd364115ee0a46281135932fa8ecea8455522166d2de"
@@ -116,7 +116,7 @@ packages:
     source: hosted
     version: "6.0.0"
   markdown:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: markdown
       sha256: "935e23e1ff3bc02d390bad4d4be001208ee92cc217cb5b5a6c19bc14aaa318c1"
@@ -190,7 +190,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.5"
   string_scanner:
     dependency: transitive
     description:

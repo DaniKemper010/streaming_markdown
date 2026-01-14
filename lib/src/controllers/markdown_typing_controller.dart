@@ -302,9 +302,12 @@ class MarkdownTypingController extends ChangeNotifier {
   }
 
   Duration _getDelay() {
-    if (_fullText.length > config.throttleThreshold) {
+    if ((_fullText.length - _index) > config.throttleThreshold) {
       return Duration(
-        milliseconds: (config.charDelay.inMilliseconds * 2).clamp(0, 100),
+        milliseconds:
+            (config.charDelay.inMilliseconds * config.throttleMultiplier)
+                .round()
+                .clamp(0, 100),
       );
     }
     switch (config.mode) {
