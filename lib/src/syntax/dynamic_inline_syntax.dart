@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:markdown/markdown.dart' as md;
 import 'custom_inline_syntax.dart';
 
@@ -19,8 +18,7 @@ class DynamicInlineSyntax extends CustomInlineSyntax {
   ///
   /// If [customPattern] is provided, it will be used instead of the default pattern.
   /// The custom pattern should include at least one capture group for content extraction.
-  DynamicInlineSyntax(this.key, {this.customPattern})
-    : super(customPattern ?? _createPattern(key));
+  DynamicInlineSyntax(this.key, {this.customPattern}) : super(customPattern ?? _createPattern(key));
 
   /// Creates a regex pattern string for the given key.
   static String _createPattern(String key) {
@@ -34,44 +32,7 @@ class DynamicInlineSyntax extends CustomInlineSyntax {
     // Extract content from the first capture group
     // For default pattern, this is group 1 (the content after the colon)
     // For custom patterns, this should be the first capture group
-    final String content = match.groupCount > 0
-        ? (match.group(1)?.trim() ?? '')
-        : '';
-    // #region agent log
-    try {
-      final logData = {
-        'sessionId': 'debug-session',
-        'runId': 'run6',
-        'hypothesisId': 'J',
-        'location': 'lib/src/syntax/dynamic_inline_syntax.dart:32',
-        'message': 'DynamicInlineSyntax.parseMatch',
-        'data': {
-          'key': key,
-          'hasCustomPattern': customPattern != null,
-          'customPattern': customPattern,
-          'content': content,
-          'matchString': match.group(0),
-          'matchStart': match.start,
-          'matchEnd': match.end,
-        },
-        'timestamp': DateTime.now().millisecondsSinceEpoch,
-      };
-      final logFile = '/Users/danikemper/streaming_markdown/.cursor/debug.log';
-      final logLine = '${logData.toString()}\n';
-      (() async {
-        try {
-          await Future(() {
-            final file = File(logFile);
-            file.writeAsStringSync(logLine, mode: FileMode.append);
-          });
-        } catch (e) {
-          // Ignore logging errors
-        }
-      })();
-    } catch (e) {
-      // Ignore logging errors
-    }
-    // #endregion
+    final String content = match.groupCount > 0 ? (match.group(1)?.trim() ?? '') : '';
     return md.Element.text(key, content);
   }
 }
