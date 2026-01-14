@@ -1,3 +1,9 @@
+## 0.0.7
+
+* Updated ChatGPT preset animation configuration with adjusted timing (wordDelay increased to 150ms)
+* Code cleanup: Removed debug logging code from example app
+* Code formatting improvements
+
 ## 0.0.6
 
 * Performance enhancements: Added throttle multiplier to animation configuration for better performance with lengthy texts

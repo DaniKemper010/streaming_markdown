@@ -35,14 +35,8 @@ class AnimationConfig {
     this.throttleThreshold = 300,
     this.throttleMultiplier = 2.0,
   }) : assert(chunkSize > 0, 'chunkSize must be greater than 0'),
-       assert(
-         throttleThreshold > 0,
-         'throttleThreshold must be greater than 0',
-       ),
-       assert(
-         throttleMultiplier > 0,
-         'throttleMultiplier must be greater than 0',
-       );
+       assert(throttleThreshold > 0, 'throttleThreshold must be greater than 0'),
+       assert(throttleMultiplier > 0, 'throttleMultiplier must be greater than 0');
 
   /// Creates a copy of this config with the given fields replaced.
   AnimationConfig copyWith({
@@ -72,9 +66,9 @@ class AnimationConfig {
   /// Word-based animation with moderate speed and smooth typing.
   static const AnimationConfig chatGPT = AnimationConfig(
     mode: AnimationMode.character,
-    wordDelay: Duration(milliseconds: 50),
-    charDelay: Duration(milliseconds: 15),
-    tokenDelay: Duration(milliseconds: 30),
+    wordDelay: Duration(milliseconds: 150),
+    // charDelay: Duration(milliseconds: 150),
+    // tokenDelay: Duration(milliseconds: 30),
     chunkSize: 1,
     throttleThreshold: 300,
     throttleMultiplier: 2.0,
