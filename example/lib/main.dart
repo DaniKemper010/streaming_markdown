@@ -15,7 +15,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Animated Markdown Example',
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple), useMaterial3: true),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
       home: const MarkdownDemoPage(),
     );
   }
@@ -118,7 +121,9 @@ Enjoy using animated markdown! 🚀
           _buildControls(),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16).copyWith(bottom: MediaQuery.of(context).padding.bottom + 16),
+              padding: const EdgeInsets.all(
+                16,
+              ).copyWith(bottom: MediaQuery.of(context).padding.bottom + 16),
               child: _selectedTab == 0
                   ? _buildStaticMarkdown()
                   : _selectedTab == 1
@@ -135,13 +140,23 @@ Enjoy using animated markdown! 🚀
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 2, offset: const Offset(0, 1))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Expanded(child: _buildTabButton(0, 'Static Markdown', Icons.text_fields)),
+          Expanded(
+            child: _buildTabButton(0, 'Static Markdown', Icons.text_fields),
+          ),
           Expanded(child: _buildTabButton(1, 'Stream Example', Icons.stream)),
-          Expanded(child: _buildTabButton(2, 'Large Chunk Stream', Icons.data_usage)),
+          Expanded(
+            child: _buildTabButton(2, 'Large Chunk Stream', Icons.data_usage),
+          ),
         ],
       ),
     );
@@ -158,10 +173,14 @@ Enjoy using animated markdown! 🚀
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? Theme.of(context).colorScheme.primaryContainer : Colors.transparent,
+          color: isSelected
+              ? Theme.of(context).colorScheme.primaryContainer
+              : Colors.transparent,
           border: Border(
             bottom: BorderSide(
-              color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.transparent,
               width: 2,
             ),
           ),
@@ -182,7 +201,9 @@ Enjoy using animated markdown! 🚀
     return AnimatedMarkdown(
       markdown: _exampleMarkdown,
       shouldAnimate: _shouldAnimate,
-      styleSheet: MarkdownStyleSheet().copyWith(p: TextStyle(color: Colors.purple)),
+      styleSheet: MarkdownStyleSheet().copyWith(
+        p: TextStyle(color: Colors.purple),
+      ),
       config:
           _selectedPreset ??
           AnimationConfig(
@@ -200,7 +221,9 @@ Enjoy using animated markdown! 🚀
             });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Button "$label" pressed! (Count: $_buttonPressCount)'),
+                content: Text(
+                  'Button "$label" pressed! (Count: $_buttonPressCount)',
+                ),
                 duration: const Duration(seconds: 1),
               ),
             );
@@ -217,7 +240,11 @@ Enjoy using animated markdown! 🚀
             });
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(_pressedChips.contains(label) ? 'Chip "$label" selected!' : 'Chip "$label" deselected!'),
+                content: Text(
+                  _pressedChips.contains(label)
+                      ? 'Chip "$label" selected!'
+                      : 'Chip "$label" deselected!',
+                ),
                 duration: const Duration(seconds: 1),
               ),
             );
@@ -229,7 +256,9 @@ Enjoy using animated markdown! 🚀
           onPressed: (citationNumber) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Citation [$citationNumber] clicked! Reference: Source $citationNumber'),
+                content: Text(
+                  'Citation [$citationNumber] clicked! Reference: Source $citationNumber',
+                ),
                 duration: const Duration(seconds: 2),
               ),
             );
@@ -238,9 +267,12 @@ Enjoy using animated markdown! 🚀
       },
       customSyntaxPatterns: {'citation': r'\[(\d+)\]'},
       onAnimationComplete: (String finalText) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Animation completed!'), duration: Duration(seconds: 2)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Animation completed!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
       },
     );
   }
@@ -263,7 +295,9 @@ Enjoy using animated markdown! 🚀
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Button "$label" pressed! (Count: $_buttonPressCount)'),
+            content: Text(
+              'Button "$label" pressed! (Count: $_buttonPressCount)',
+            ),
             duration: const Duration(seconds: 1),
           ),
         );
@@ -278,7 +312,11 @@ Enjoy using animated markdown! 🚀
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_pressedChips.contains(label) ? 'Chip "$label" selected!' : 'Chip "$label" deselected!'),
+            content: Text(
+              _pressedChips.contains(label)
+                  ? 'Chip "$label" selected!'
+                  : 'Chip "$label" deselected!',
+            ),
             duration: const Duration(seconds: 1),
           ),
         );
@@ -304,7 +342,9 @@ Enjoy using animated markdown! 🚀
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Button "$label" pressed! (Count: $_buttonPressCount)'),
+            content: Text(
+              'Button "$label" pressed! (Count: $_buttonPressCount)',
+            ),
             duration: const Duration(seconds: 1),
           ),
         );
@@ -319,7 +359,11 @@ Enjoy using animated markdown! 🚀
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_pressedChips.contains(label) ? 'Chip "$label" selected!' : 'Chip "$label" deselected!'),
+            content: Text(
+              _pressedChips.contains(label)
+                  ? 'Chip "$label" selected!'
+                  : 'Chip "$label" deselected!',
+            ),
             duration: const Duration(seconds: 1),
           ),
         );
@@ -334,17 +378,31 @@ Enjoy using animated markdown! 🚀
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 2))],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Expanded(child: Text('Preset Config', style: Theme.of(context).textTheme.titleSmall)),
+                Expanded(
+                  child: Text(
+                    'Preset Config',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ),
                 Row(
                   children: [
-                    Text('Animate', style: Theme.of(context).textTheme.titleSmall),
+                    Text(
+                      'Animate',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
                     const SizedBox(width: 8),
                     Switch(
                       value: _shouldAnimate,
@@ -373,7 +431,10 @@ Enjoy using animated markdown! 🚀
             ),
             if (_selectedPreset == null) ...[
               const SizedBox(height: 16),
-              Text('Animation Mode', style: Theme.of(context).textTheme.titleSmall),
+              Text(
+                'Animation Mode',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -387,10 +448,15 @@ Enjoy using animated markdown! 🚀
             ],
             if (_buttonPressCount > 0 || _pressedChips.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Text('Interactions', style: Theme.of(context).textTheme.titleSmall),
+              Text(
+                'Interactions',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
               const SizedBox(height: 8),
-              if (_buttonPressCount > 0) Text('Button presses: $_buttonPressCount'),
-              if (_pressedChips.isNotEmpty) Text('Selected chips: ${_pressedChips.join(", ")}'),
+              if (_buttonPressCount > 0)
+                Text('Button presses: $_buttonPressCount'),
+              if (_pressedChips.isNotEmpty)
+                Text('Selected chips: ${_pressedChips.join(", ")}'),
             ],
           ],
         ),
@@ -468,7 +534,12 @@ class CitationBuilder extends InlineBuilder {
     );
     return Text.rich(
       TextSpan(
-        children: [WidgetSpan(alignment: PlaceholderAlignment.middle, child: citationWidget)],
+        children: [
+          WidgetSpan(
+            alignment: PlaceholderAlignment.middle,
+            child: citationWidget,
+          ),
+        ],
       ),
       style: style,
     );
@@ -505,7 +576,11 @@ class SourceBuilder extends InlineBuilder {
                 const SizedBox(width: 4),
                 Text(
                   source,
-                  style: style?.copyWith(color: color ?? Colors.blue, fontSize: 12, fontWeight: FontWeight.w500),
+                  style: style?.copyWith(
+                    color: color ?? Colors.blue,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -625,7 +700,9 @@ The stream continues to work even with large amounts of content. The animation a
     final List<String> chunks = [];
     final int chunkSize = 50;
     for (int i = 0; i < text.length; i += chunkSize) {
-      final int end = (i + chunkSize < text.length) ? i + chunkSize : text.length;
+      final int end = (i + chunkSize < text.length)
+          ? i + chunkSize
+          : text.length;
       chunks.add(text.substring(i, end));
     }
     return chunks;
@@ -667,7 +744,9 @@ The stream continues to work even with large amounts of content. The animation a
         AnimatedMarkdown(
           key: ValueKey<int>(_streamKey),
           stream: _getOrCreateStream(),
-          styleSheet: MarkdownStyleSheet().copyWith(p: TextStyle(color: Colors.red)),
+          styleSheet: MarkdownStyleSheet().copyWith(
+            p: TextStyle(color: Colors.red),
+          ),
           shouldAnimate: widget.shouldAnimate,
           config: widget.config,
           customBuilders: {
@@ -680,7 +759,9 @@ The stream continues to work even with large amounts of content. The animation a
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Citation [$citationNumber] clicked! Reference: Source $citationNumber'),
+                      content: Text(
+                        'Citation [$citationNumber] clicked! Reference: Source $citationNumber',
+                      ),
                       duration: const Duration(seconds: 2),
                     ),
                   );
@@ -692,7 +773,10 @@ The stream continues to work even with large amounts of content. The animation a
           onAnimationComplete: (String finalText) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Stream animation completed!'), duration: Duration(seconds: 2)),
+                const SnackBar(
+                  content: Text('Stream animation completed!'),
+                  duration: Duration(seconds: 2),
+                ),
               );
             }
           },
@@ -717,7 +801,8 @@ class LargeChunkStreamExample extends StatefulWidget {
   });
 
   @override
-  State<LargeChunkStreamExample> createState() => _LargeChunkStreamExampleState();
+  State<LargeChunkStreamExample> createState() =>
+      _LargeChunkStreamExampleState();
 }
 
 class _LargeChunkStreamExampleState extends State<LargeChunkStreamExample> {
@@ -799,7 +884,9 @@ The stream continues to work even with large amounts of content. The animation a
       _streamController?.close();
       return;
     }
-    final Duration delay = index == 0 ? Duration.zero : const Duration(seconds: 3);
+    final Duration delay = index == 0
+        ? Duration.zero
+        : const Duration(seconds: 3);
     Future.delayed(delay, () {
       if (_streamController != null && !_streamController!.isClosed) {
         _streamController!.add(chunks[index]);
@@ -812,7 +899,9 @@ The stream continues to work even with large amounts of content. The animation a
     final int splitPoint = (text.length * 0.6).round();
     int bestSplitPoint = splitPoint;
     for (int i = splitPoint - 50; i < splitPoint + 50 && i < text.length; i++) {
-      if (i > 0 && text[i] == '\n' && (i == text.length - 1 || text[i + 1] == '\n')) {
+      if (i > 0 &&
+          text[i] == '\n' &&
+          (i == text.length - 1 || text[i + 1] == '\n')) {
         bestSplitPoint = i + 1;
         break;
       }
@@ -856,7 +945,9 @@ The stream continues to work even with large amounts of content. The animation a
         AnimatedMarkdown(
           key: ValueKey<int>(_streamKey),
           stream: _getOrCreateStream(),
-          styleSheet: MarkdownStyleSheet().copyWith(p: TextStyle(color: Colors.red)),
+          styleSheet: MarkdownStyleSheet().copyWith(
+            p: TextStyle(color: Colors.red),
+          ),
           shouldAnimate: widget.shouldAnimate,
           config: widget.config,
           customBuilders: {
@@ -869,7 +960,9 @@ The stream continues to work even with large amounts of content. The animation a
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Citation [$citationNumber] clicked! Reference: Source $citationNumber'),
+                      content: Text(
+                        'Citation [$citationNumber] clicked! Reference: Source $citationNumber',
+                      ),
                       duration: const Duration(seconds: 2),
                     ),
                   );

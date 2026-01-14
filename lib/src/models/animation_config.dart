@@ -35,8 +35,14 @@ class AnimationConfig {
     this.throttleThreshold = 300,
     this.throttleMultiplier = 2.0,
   }) : assert(chunkSize > 0, 'chunkSize must be greater than 0'),
-       assert(throttleThreshold > 0, 'throttleThreshold must be greater than 0'),
-       assert(throttleMultiplier > 0, 'throttleMultiplier must be greater than 0');
+       assert(
+         throttleThreshold > 0,
+         'throttleThreshold must be greater than 0',
+       ),
+       assert(
+         throttleMultiplier > 0,
+         'throttleMultiplier must be greater than 0',
+       );
 
   /// Creates a copy of this config with the given fields replaced.
   AnimationConfig copyWith({
