@@ -20,7 +20,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  streaming_markdown: ^0.0.4
+  streaming_markdown: ^0.0.6
   # For local development, use: streaming_markdown: { path: ../streaming_markdown }
 ```
 

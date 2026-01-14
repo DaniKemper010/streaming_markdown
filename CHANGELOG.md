@@ -1,3 +1,10 @@
+## 0.0.6
+
+* Performance enhancements: Added throttle multiplier to animation configuration for better performance with lengthy texts
+* Large chunk stream support: Introduced `LargeChunkStreamExample` for handling large data streams with improved animation performance
+* Debugging improvements: Added logging for debugging custom inline syntax processing and citation rendering
+* Dependency updates: Updated `pubspec.lock` to reflect direct dependencies
+
 ## 0.0.5
 
 * Added `onAnimationComplete` callback to `AnimatedMarkdown` widget
